@@ -1,0 +1,13 @@
+[package]
+name = "neural-redis"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+bytes = "1"
+anyhow = "1"
+log = "0.4"
+once_cell = "1.0"
+fastembed = "5"
+aligned = "0.4.3"
