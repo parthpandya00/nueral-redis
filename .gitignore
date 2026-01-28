@@ -36,3 +36,4 @@ release/
 # Rust-specific
 rusty-tags.vi
 tags
+.fastembed_cache/

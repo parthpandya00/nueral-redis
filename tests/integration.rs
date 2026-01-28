@@ -72,6 +72,23 @@ async fn test_e2e() {
     eprintln!("Received: {:?}", &buf[..n]);
     assert_eq!(&buf[..n], b"$-1\r\n");
 
+    // Test SET with UTF-8 string for embedding
+    eprintln!("Sending SET for embedding");
+    stream.write_all(b"*3\r\n$3\r\nSET\r\n$7\r\nembkey1\r\n$11\r\nhello world\r\n").await.unwrap();
+    let n = stream.read(&mut buf).await.unwrap();
+    assert_eq!(&buf[..n], b"+OK\r\n");
+
+    // Wait for embedding generation
+    tokio::time::sleep(Duration::from_secs(2)).await;
+
+    // Test SIMILARITY
+    eprintln!("Sending SIMILARITY");
+    stream.write_all(b"*3\r\n$10\r\nSIMILARITY\r\n$7\r\nembkey1\r\n$1\r\n1\r\n").await.unwrap();
+    let n = stream.read(&mut buf).await.unwrap();
+    eprintln!("Received: {:?}", &buf[..n]);
+    // Should be *1\r\n$7\r\nembkey1\r\n
+    assert!(&buf[..n].starts_with(b"*1\r\n$7\r\nembkey1\r\n"));
+
     // Shutdown the server
     tx.send(()).unwrap();
     server_handle.await.unwrap();
