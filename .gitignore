@@ -35,8 +35,4 @@ release/
 
 # Rust-specific
 rusty-tags.vi
-<<<<<<< HEAD
 tags
-=======
-tags
->>>>>>> main
